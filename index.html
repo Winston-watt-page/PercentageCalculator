@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANM Percentage Calculator</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: white;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      padding: 35px 30px;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      animation: fadeIn 0.7s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 22px;
+      font-size: 24px;
+      font-weight: 700;
+      text-shadow: 0px 2px 6px rgba(0,0,0,0.3);
+    }
+
+    label {
+      font-size: 14px;
+      margin-bottom: 6px;
+      display: block;
+      font-weight: 500;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-bottom: 18px;
+      font-size: 15px;
+      background: rgba(255,255,255,0.85);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #ffcc00;
+      color: #000;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: #ffdb4d;
+    }
+
+    .error {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ff9b9b;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    /* Popup Modal */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      animation: fadeInOverlay .4s ease;
+    }
+
+    @keyframes fadeInOverlay {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .popup {
+      background: #ffffff;
+      color: #000;
+      width: 85%;
+      max-width: 350px;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      animation: scaleUp .4s ease-in-out;
+    }
+
+    @keyframes scaleUp {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .popup p {
+      font-size: 18px;
+      margin: 8px 0;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      margin-top: 14px;
+      background: #1e3c72;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    .close-btn:hover {
+      background: #274a8c;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>ANM Percentage Calculator</h1>
+
+    <label for="sslc">10th / SSLC Mark (out of 500)</label>
+    <input type="number" id="sslc" min="0" max="500" placeholder="Enter SSLC mark">
+
+    <label for="hsc">12th / HSC Mark (out of 1200)</label>
+    <input type="number" id="hsc" min="0" max="1200" placeholder="Enter HSC mark">
+
+    <label for="anm">ANM Mark (out of 1400)</label>
+    <input type="number" id="anm" min="0" max="1400" placeholder="Enter ANM mark">
+
+    <button onclick="calculate()">Calculate Percentage</button>
+
+    <div id="error" class="error"></div>
+  </div>
+
+  <!-- Popup Modal -->
+  <div class="overlay" id="overlay">
+    <div class="popup">
+      <h2>Result</h2>
+      <p>Total: <span id="total"></span></p>
+      <p>Your Percentage: <span id="percentage"></span>%</p>
+      <button class="close-btn" onclick="closePopup()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      const sslc = parseFloat(document.getElementById('sslc').value);
+      const hsc = parseFloat(document.getElementById('hsc').value);
+      const anm = parseFloat(document.getElementById('anm').value);
+      const errorDiv = document.getElementById('error');
+      const overlay = document.getElementById('overlay');
+
+      errorDiv.textContent = '';
+
+      if (isNaN(sslc) || isNaN(hsc) || isNaN(anm)) {
+        errorDiv.textContent = "❌ Please enter all marks!";
+        return;
+      }
+
+      if (sslc < 0 || sslc > 500 || hsc < 0 || hsc > 1200 || anm < 0 || anm > 1400) {
+        errorDiv.textContent = "⚠️ Check mark limits!";
+        return;
+      }
+
+      const a = sslc * 0.2 + hsc * 0.3 + anm * 0.5;
+      const percentage = (a / 1160) * 100;
+
+      document.getElementById('total').textContent = a.toFixed(2);
+      document.getElementById('percentage').textContent = percentage.toFixed(2);
+
+      overlay.style.display = "flex";
+    }
+
+    function closePopup() {
+      document.getElementById("overlay").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
