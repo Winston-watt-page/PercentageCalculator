@@ -108,7 +108,7 @@
       color: #000;
       width: 85%;
       max-width: 350px;
-      padding: 20px;
+      padding: 22px 20px;
       border-radius: 15px;
       text-align: center;
       animation: scaleUp .4s ease-in-out;
@@ -126,9 +126,10 @@
     }
 
     .popup p {
-      font-size: 18px;
+      font-size: 22px;
       margin: 8px 0;
-      font-weight: 600;
+      font-weight: 700;
+      color: #1e3c72;
     }
 
     .close-btn {
@@ -172,9 +173,8 @@
   <!-- Popup Modal -->
   <div class="overlay" id="overlay">
     <div class="popup">
-      <h2>Result</h2>
-      <p>Total: <span id="total"></span></p>
-      <p>Your Percentage: <span id="percentage"></span>%</p>
+      <h2>Your Percentage</h2>
+      <p><span id="percentage"></span>%</p>
       <button class="close-btn" onclick="closePopup()">Close</button>
     </div>
   </div>
@@ -202,7 +202,6 @@
       const a = sslc * 0.2 + hsc * 0.3 + anm * 0.5;
       const percentage = (a / 1160) * 100;
 
-      document.getElementById('total').textContent = a.toFixed(2);
       document.getElementById('percentage').textContent = percentage.toFixed(2);
 
       overlay.style.display = "flex";
